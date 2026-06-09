@@ -30,8 +30,8 @@
             </select>
 
             <div id="campoCliente">
-                <input type="text" name="cpf" id="cpf" placeholder="CPF (000.000.000-00)">
-                <input type="text" name="telefone" id="telefone" placeholder="Telefone ((00) 00000-0000)">
+                <input type="text" name="cpf" id="cpf" placeholder="CPF (000.000.000-00)" required>
+                <input type="text" name="telefone" id="telefone" placeholder="Telefone ((00) 00000-0000)" required>
             </div>
 
             <div id="campoAdmin" style="display:none;">
@@ -45,7 +45,6 @@
     </div>
 
     <script>
-    // --- Lógica de Máscaras (Igual à sua original) ---
     function mascaraCPF(valor) {
         return valor.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})/, '$1-$2').replace(/(-\d{2})\d+?$/, '$1');
     }
@@ -62,23 +61,40 @@
         telInput.addEventListener('input', (e) => e.target.value = mascaraTelefone(e.target.value));
 
         document.getElementById('formCadastro').addEventListener('submit', function(e) {
+            // Remove as máscaras para enviar apenas os números limpos ao Servlet backend
             cpfInput.value = cpfInput.value.replace(/\D/g, '');
             telInput.value = telInput.value.replace(/\D/g, '');
         });
     });
 
-    // --- Lógica de Toggle de Campos ---
     function toggleCampos() {
         var tipo = document.getElementById("tipoUsuario").value;
         var divCliente = document.getElementById("campoCliente");
         var divAdmin = document.getElementById("campoAdmin");
         
-        divCliente.style.display = (tipo === "Cliente") ? "block" : "none";
-        divAdmin.style.display = (tipo === "Administrador") ? "block" : "none";
+        var cpf = document.getElementById("cpf");
+        var telefone = document.getElementById("telefone");
+        var cargo = document.getElementById("cargo");
         
-        document.getElementById("cpf").disabled = (tipo !== "Cliente");
-        document.getElementById("telefone").disabled = (tipo !== "Cliente");
-        document.getElementById("cargo").disabled = (tipo !== "Administrador");
+        if (tipo === "Cliente") {
+            divCliente.style.display = "block";
+            divAdmin.style.display = "none";
+            cpf.disabled = false;
+            telefone.disabled = false;
+            cargo.disabled = true;
+            cpf.required = true;
+            telefone.required = true;
+            cargo.required = false;
+        } else {
+            divCliente.style.display = "none";
+            divAdmin.style.display = "block";
+            cpf.disabled = true;
+            telefone.disabled = true;
+            cargo.disabled = false;
+            cpf.required = false;
+            telefone.required = false;
+            cargo.required = true;
+        }
     }
     </script>
 </body>

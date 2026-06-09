@@ -4,6 +4,7 @@ import command.Command;
 import command.RegistrarManutencaoCommand;
 import command.FinalizarManutencaoCommand;
 import model.Manutencao;
+import decorator.*; // CORREÇÃO 1: Importa todas as classes do novo pacote decorator
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -57,15 +58,30 @@ public class ManutencaoController extends HttpServlet {
                 Date data = Date.valueOf(request.getParameter("data"));
                 boolean revisao = request.getParameter("revisaoObrigatoria") != null;
 
-                // Construtor ajustado para os campos obrigatórios
+                // 1. Instancia o objeto model original com a descrição vinda da tela
                 Manutencao m = new Manutencao(data, descricao, idCarro, idAdm);
                 m.setRevisaoObrigatoria(revisao); 
 
+                // 2. APLICAÇÃO DO DECORATOR: Criamos o componente básico (Sem o parâmetro de preço double)
+                ServicoOficina servicoCompleto = new ManutencaoBasica(m);
+
+                // 3. Verifica dinamicamente os parâmetros enviados pelas checkboxes da tela JSP
+                if (request.getParameter("trocaOleo") != null) {
+                    servicoCompleto = new TrocaOleoDecorator(servicoCompleto);
+                }
+                if (request.getParameter("trocaPneu") != null) {
+                    servicoCompleto = new TrocaPneuDecorator(servicoCompleto);
+                }
+
+                // 4. Injeta apenas a descrição final gerada cumulativamente pelos Decorators (Sem preços)
+                m.setDescricao(servicoCompleto.getDescricao());
+
+                // 5. Executa o comando para persistência no banco
                 Command cmd = new RegistrarManutencaoCommand(m);
                 cmd.executar();
 
-                // Após registrar, o usuário volta para o dashboard ou para a lista da oficina
-                response.sendRedirect(request.getContextPath() + "/gerenciar_oficina.jsp?msg=Veiculo registrado na oficina!");
+                // Retorna informando o sucesso
+                response.sendRedirect(request.getContextPath() + "/gerenciar_oficina.jsp?msg=Veiculo registrado na oficina com adicionais!");
 
             } catch (Exception e) {
                 response.sendRedirect(request.getContextPath() + "/dashboard.jsp?erro=Erro ao registrar: " + e.getMessage());

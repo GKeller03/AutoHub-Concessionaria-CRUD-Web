@@ -20,7 +20,6 @@ public class CarroController extends HttpServlet {
             String action = request.getParameter("action");
             String idParam = request.getParameter("id");
 
-            // Debug para o console do NetBeans
             System.out.println("Ação: " + action + " | ID: " + idParam);
 
             if (("excluir".equals(action) || "delete".equals(action)) && idParam != null) {
@@ -31,14 +30,13 @@ public class CarroController extends HttpServlet {
                 return;
             }
 
-            // Listagem padrão
             ListarCarrosCommand listar = new ListarCarrosCommand();
             listar.executar();
             request.setAttribute("listaCarros", listar.getResultado());
             request.getRequestDispatcher("/lista_carros.jsp").forward(request, response);
             
         } catch (Exception e) {
-            e.printStackTrace(); // Importante para ver o erro real no console
+            e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/dashboard.jsp?erro=" + URLEncoder.encode(e.getMessage(), "UTF-8"));
         }
     }
@@ -61,19 +59,28 @@ public class CarroController extends HttpServlet {
             
             carro.validar(); 
             
-            if (!"update".equals(action)) {
-                new CarroDAO().validarPlacaUnica(carro.getPlaca());
-            }
+            Command comando;
 
-            Command comando = new SalvarCarroCommand(carro);
-            
             if ("update".equals(action)) {
                 carro.setIdCarro(Integer.parseInt(request.getParameter("idCarro")));
                 carro.setStatus(request.getParameter("status"));
                 Usuario user = (Usuario) request.getSession().getAttribute("usuarioLogado");
-                comando = new AtualizarCarroCommand(carro, user.getIdUsuario());
+                
+                // EXTRAÇÃO DAS VARIÁVEIS DO DECORATOR (Mapeando os checkboxes do formulário)
+                // Usamos "true".equals(...) para garantir o tipo booleano primitivo
+                boolean trocaOleo = "true".equals(request.getParameter("trocaOleo"));
+                boolean trocaPneu = "true".equals(request.getParameter("trocaPneu"));
+                
+                // Injeta as flags diretamente no construtor correto do Command atualizado
+                comando = new AtualizarCarroCommand(carro, user.getIdUsuario(), trocaOleo, trocaPneu);
+                
+            } else {
+                // Se não for update, valida se a placa é única antes de cadastrar um novo veículo
+                new CarroDAO().validarPlacaUnica(carro.getPlaca());
+                comando = new SalvarCarroCommand(carro);
             }
 
+            // O comando executa e delega internamente a regra de negócio do Decorator
             comando.executar();
 
             String destino = "Manutenção".equals(carro.getStatus()) ? "/gerenciar_oficina.jsp" : "/dashboard.jsp";

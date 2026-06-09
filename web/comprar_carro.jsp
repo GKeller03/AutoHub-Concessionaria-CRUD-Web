@@ -64,7 +64,6 @@
             margin: 0 auto;
         }
 
-        /* Card de Compra */
         .buy-card {
             background-color: #181818;
             border-radius: 15px;
@@ -117,14 +116,16 @@
 
         .btn-action-buy {
             display: block;
+            width: 100%;
             background-color: var(--primary-red);
             color: white;
-            text-decoration: none;
+            border: none;
             padding: 15px;
             border-radius: 8px;
             font-weight: bold;
             text-transform: uppercase;
             font-size: 16px;
+            cursor: pointer;
             transition: background 0.3s;
         }
 
@@ -174,17 +175,17 @@
                     Pronto para entrega imediata
                 </div>
 
-                <a href="${pageContext.request.contextPath}/pedido?idCarro=<%= c.getIdCarro() %>&valor=<%= c.getPreco() %>" 
-                   class="btn-action-buy">
-                    Comprar Agora
-                </a>
+                <form action="${pageContext.request.contextPath}/pedido" method="POST">
+                    <input type="hidden" name="idCarro" value="<%= c.getIdCarro() %>">
+                    <input type="hidden" name="valor" value="<%= c.getPreco() %>">
+                    <button type="submit" class="btn-action-buy">Comprar Agora</button>
+                </form>
             </div>
         <% 
                 }
             } else { 
         %>
             <div class="empty-state">
-                <span
                 <h2>Nenhum veículo disponível no momento.</h2>
                 <p>Nossos carros estão correndo rápido! Volte em breve para novas ofertas.</p>
             </div>

@@ -57,12 +57,6 @@
             position: relative;
         }
 
-        .logo-top {
-            position: absolute;
-            top: -100px;
-            right: -150px; /* Ajuste dependendo do tamanho da tela */
-        }
-
         h3 {
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -88,7 +82,7 @@
         input, select {
             width: 100%;
             padding: 15px;
-            background-color: #3d3939; /* Cor fiel à sua imagem */
+            background-color: #3d3939;
             border: 1px solid #444;
             border-radius: 10px;
             color: white;
@@ -100,6 +94,41 @@
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary-red);
+        }
+
+        /* Container do Decorator */
+        .decorator-box {
+            background-color: #111;
+            border: 1px dashed #444;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .decorator-title {
+            color: var(--primary-red);
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ccc;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-label input {
+            width: auto;
+            accent-color: var(--primary-red);
         }
 
         .btn-save {
@@ -131,9 +160,7 @@
             font-weight: bold;
         }
 
-        .back-link:hover {
-            color: var(--primary-red);
-        }
+        .back-link:hover { color: var(--primary-red); }
         
         .logo-fixed {
             position: fixed;
@@ -154,7 +181,6 @@
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="idCarro" value="<%= carro.getIdCarro() %>">
             
-            <%-- Mantendo dados que não são editados para não perdê-los no objeto --%>
             <input type="hidden" name="placa" value="<%= carro.getPlaca() %>">
             <input type="hidden" name="cor" value="<%= carro.getCor() %>">
             <input type="hidden" name="ano" value="<%= carro.getAno() %>">
@@ -171,11 +197,22 @@
 
             <div class="form-group">
                 <label>Status do Veículo:</label>
-                <select name="status">
+                <select name="status" id="statusSelect">
                     <option value="Disponível" <%= "Disponível".equals(carro.getStatus()) ? "selected" : "" %>>Disponível</option>
                     <option value="Vendido" <%= "Vendido".equals(carro.getStatus()) ? "selected" : "" %>>Vendido</option>
                     <option value="Manutenção" <%= "Manutenção".equals(carro.getStatus()) ? "selected" : "" %>>Manutenção</option>
                 </select>
+            </div>
+
+            <%-- BLOCO DINÂMICO DE FLAGS BOOLEANAS DO DECORATOR --%>
+            <div id="decoratorSection" class="decorator-box" style="display: none;">
+                <span class="decorator-title">Serviços da Oficina:</span>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="trocaOleo" value="true"> Necessita Troca de Óleo?
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="trocaPneu" value="true"> Necessita Troca de Pneu?
+                </label>
             </div>
 
             <button type="submit" class="btn-save">Salvar Alterações</button>
@@ -184,5 +221,24 @@
         <a href="${pageContext.request.contextPath}/api/carro" class="back-link">+ Cancelar e Voltar</a>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const statusSelect = document.getElementById("statusSelect");
+            const decoratorSection = document.getElementById("decoratorSection");
+
+            function toggleDecorator() {
+                if (statusSelect.value === "Manutenção") {
+                    decoratorSection.style.display = "block";
+                } else {
+                    decoratorSection.style.display = "none";
+                    // Limpa os checkboxes se mudar para outro status
+                    decoratorSection.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+                }
+            }
+
+            statusSelect.addEventListener("change", toggleDecorator);
+            toggleDecorator(); // Executa na carga inicial da página
+        });
+    </script>
 </body>
 </html>

@@ -56,16 +56,18 @@
             background-color: #111;
             border-radius: 10px;
             overflow: hidden;
+            border: 1px solid #222;
         }
 
         .tabela-oficina th {
-            background-color: #444; /* Cinza da imagem de referência */
+            background-color: #222;
             color: white;
             text-transform: uppercase;
             font-size: 13px;
             padding: 15px;
             text-align: center;
             letter-spacing: 1px;
+            border-bottom: 2px solid #333;
         }
 
         .tabela-oficina td {
@@ -75,11 +77,22 @@
             font-size: 14px;
         }
 
-        /* Status Badges */
+        /* Badges Lógicas */
         .badge-servico { color: #82f011; font-family: monospace; }
-        
         .badge-revisao-nao { color: #ff4444; font-weight: bold; }
         .badge-revisao-sim { color: #82f011; font-weight: bold; }
+        
+        .badge-decorada {
+            display: inline-block;
+            background-color: #222;
+            color: #82f011;
+            border: 1px solid #333;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
 
         .status-reparo {
             background-color: #ffb84d;
@@ -91,7 +104,6 @@
             font-size: 11px;
         }
 
-        /* Botão Finalizar Neon */
         .btn-acao-finalizar {
             background-color: #82f011;
             color: black;
@@ -123,7 +135,6 @@
         }
 
         .btn-history:hover { border-color: #82f011; color: #82f011; }
-
         .back-link {
             display: inline-block;
             margin-top: 30px;
@@ -166,12 +177,21 @@
                     
                     if (listaOficina != null && !listaOficina.isEmpty()) {
                         for (Manutencao m : listaOficina) {
+                            String descLower = m.getDescricao() != null ? m.getDescricao().toLowerCase() : "";
                 %>
                 <tr>
                     <td class="badge-servico"><%= m.getData() %></td>
                     <td style="font-weight: bold; color: white;">#<%= m.getIdCarro() %></td>
-                    <td style="color: #bbb;">
-                        <%= (m.getDescricao() == null || m.getDescricao().isEmpty()) ? "MANUTENÇÃO INICIADA VIA SISTEMA" : m.getDescricao().toUpperCase() %>
+                    <td style="color: #bbb; text-align: left; max-width: 450px;">
+                        <span><%= (m.getDescricao() == null || m.getDescricao().isEmpty()) ? "MANUTENÇÃO INICIADA" : m.getDescricao().toUpperCase() %></span>
+                        
+                        <%-- RENDERIZAÇÃO VISUAL BASEADA NO DECORATOR EMbutido NA STRING --%>
+                        <% if (descLower.contains("óleo") || descLower.contains("oleo")) { %>
+                            <span class="badge-decorada">🛢️ ÓLEO</span>
+                        <% } %>
+                        <% if (descLower.contains("pneu")) { %>
+                            <span class="badge-decorada">🛞 PNEU</span>
+                        <% } %>
                     </td>
                     <td>
                         <span class="<%= m.isRevisaoObrigatoria() ? "badge-revisao-sim" : "badge-revisao-nao" %>">
@@ -200,7 +220,7 @@
             </tbody>
         </table>
 
-        <a href="dashboard.jsp" class="back-link">⬅ Voltar</a>
+        <a href="dashboard.jsp" class="back-link">⬅ Voltar ao Painel</a>
     </div>
 
 </body>
