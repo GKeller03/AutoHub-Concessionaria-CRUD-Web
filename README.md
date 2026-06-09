@@ -17,21 +17,20 @@
 ## Preview
 
 | Login | Cadastro Cliente | Cadastro Admin |
-|-------|------------------|----------------|
+| :--- | :--- | :--- |
 | ![Login](screenshots/login.png) | ![Cadastro Cliente](screenshots/cadastro-cliente.png) | ![Cadastro Admin](screenshots/cadastro-admin.png) |
 
 | Dashboard Admin | Dashboard Cliente | Estoque |
-|-----------------|-------------------|---------|
+| :--- | :--- | :--- |
 | ![Admin](screenshots/dashboard-admin.png) | ![Cliente](screenshots/dashboard-cliente.png) | ![Estoque](screenshots/estoque.png) |
 
 | Controle de Oficina | Historico | Area de Compras |
-|---------------------|-----------|-----------------|
+| :--- | :--- | :--- |
 | ![Oficina](screenshots/oficina.png) | ![Historico](screenshots/historico.png) | ![Compras](screenshots/pedido.png) |
 
 | Editar Veiculo (Decorator) | Oficina com Decorators |
-|------------------------------|----------------------|------------------------|
+| :--- | :--- |
 | ![Editar Carro](screenshots/editar-carro-decorator.png) | ![Oficina Decorator](screenshots/oficina-com-decorator.png) |
-
 ---
 
 ## Sobre o Projeto
