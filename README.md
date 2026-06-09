@@ -28,9 +28,9 @@
 |---------------------|-----------|-----------------|
 | ![Oficina](screenshots/oficina.png) | ![Historico](screenshots/historico.png) | ![Compras](screenshots/pedido.png) |
 
-| Editar Veiculo (Decorator) | Registrar Manutencao | Oficina com Decorators |
+| Editar Veiculo (Decorator) | Oficina com Decorators |
 |------------------------------|----------------------|------------------------|
-| ![Editar Carro](screenshots/editar-carro-decorator.png) | ![Registrar Manutencao](screenshots/registrar-manutencao.png) | ![Oficina Decorator](screenshots/oficina-com-decorator.png) |
+| ![Editar Carro](screenshots/editar-carro-decorator.png) | ![Oficina Decorator](screenshots/oficina-com-decorator.png) |
 
 ---
 
