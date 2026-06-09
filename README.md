@@ -28,6 +28,10 @@
 |---------------------|-----------|-----------------|
 | ![Oficina](screenshots/oficina.png) | ![Historico](screenshots/historico.png) | ![Compras](screenshots/pedido.png) |
 
+| Editar Veiculo (Decorator) | Registrar Manutencao | Oficina com Decorators |
+|------------------------------|----------------------|------------------------|
+| ![Editar Carro](screenshots/editar-carro-decorator.png) | ![Registrar Manutencao](screenshots/registrar-manutencao.png) | ![Oficina Decorator](screenshots/oficina-com-decorator.png) |
+
 ---
 
 ## Sobre o Projeto
@@ -224,12 +228,38 @@ private static final String USER = "root";
 private static final String PASSWORD = "sua_senha";
 ```
 
-### 4. Execute no servidor
+### 4. Configure as dependencias
+
+O projeto usa uma pasta `lib/` com caminhos relativos no NetBeans:
+
+| Arquivo | Uso |
+|---------|-----|
+| `lib/junit-4.13.2.jar` | Testes automatizados |
+| `lib/hamcrest-core-1.3.jar` | Dependencia do JUnit |
+| `lib/mockito-core-5.11.0.jar` | Disponivel para testes com mocks |
+| `lib/byte-buddy-1.14.12.jar` | Dependencia do Mockito |
+| `lib/byte-buddy-agent-1.14.12.jar` | Dependencia do Mockito |
+| `lib/mysql-connector-j-9.6.0.jar` | Driver JDBC do MySQL |
+
+Baixe o driver MySQL e coloque em `lib/mysql-connector-j-9.6.0.jar` se ainda nao estiver no projeto.
+
+No NetBeans, abra **Properties > Libraries** e confirme que o classpath aponta para a pasta `lib/`.
+
+### 5. Execute no servidor
 
 1. Importe o projeto na IDE.
 2. Configure o Apache Tomcat/TomEE.
 3. Execute o projeto no servidor.
 4. Acesse a aplicacao no navegador pelo contexto configurado.
+
+### 6. Execute os testes
+
+No NetBeans:
+
+1. Clique com o botao direito na pasta `test`.
+2. Selecione **Test** ou **Run File** em um teste especifico.
+
+Os testes atuais cobrem os decorators da oficina e a regra de negocio do `AtualizarCarroCommand`.
 
 ---
 

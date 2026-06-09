@@ -1,0 +1,7 @@
+build/
+dist/
+nbproject/private/
+screenshots/_preview/
+*.war
+*.ear
+.idea/
